@@ -1,95 +1,41 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KYT Duck Breeder Dashboard</title>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KYT Duck Breeder Dashboard</title>
 <style>
-:root{--bg:#071522;--panel:#10283b;--blue:#183675;--blue2:#24468d;--line:#29465f;--text:#eaf2ff;--muted:#9bb4d0;--gold:#ffd33d;--green:#42d879;--red:#ff6577}
+:root{--bg:#071522;--panel:#10283b;--blue:#183675;--line:#29465f;--text:#eaf2ff;--muted:#9bb4d0;--gold:#ffd33d;--green:#42d879}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 "Segoe UI",Tahoma,sans-serif}
-header{margin:18px auto 14px;max-width:1500px;padding:22px;background:linear-gradient(120deg,#19367b,#10285b);border-radius:18px}
-h1{margin:0;font-size:26px}header p{margin:5px 0 16px;color:#d5e2ff}
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px}.kpi{background:#ffffff12;border:1px solid #ffffff2a;border-radius:13px;padding:15px}.kpi small{color:#d2defa}.kpi strong{display:block;font-size:27px;margin:4px 0;color:white}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}button,.btn{border:1px solid #718bc5;background:#29488c;color:white;padding:9px 14px;border-radius:9px;cursor:pointer;font:inherit}button:hover{background:#3c5ca8}button.active{background:var(--gold);color:#16233c;border-color:var(--gold);font-weight:700}
-.layout{max-width:1500px;margin:auto;padding:0 0 30px;display:grid;grid-template-columns:260px 1fr;gap:16px}
-aside,.main{background:var(--panel);border-radius:16px;padding:16px;min-width:0}
-aside{height:calc(100vh - 450px);min-height:450px;overflow:auto}aside h3{margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:10px}
-.nav{width:100%;text-align:left;margin:4px 0;background:transparent;border:1px solid transparent;color:#d7e5ff}.nav:before{content:"●";color:var(--gold);margin-right:10px}.nav.active{background:#fff;color:#16346f;border-color:#fff}
-.orglist{margin-top:15px;border-top:1px solid var(--line);padding-top:10px}.org{width:100%;display:flex;justify-content:space-between;gap:6px;text-align:left;margin:4px 0;background:#18345f;border-color:#34527e;font-size:13px}.org b{color:var(--green)}
-.mainhead{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}.logo{background:white;color:#24538d;border-radius:10px;padding:12px;font-weight:900;min-width:130px;text-align:center}.eyebrow{color:#90b7ff}.hero{font-size:clamp(23px,3vw,36px);color:#83aaff;margin:10px 0}.summary{color:#d9e7f7;margin-bottom:18px}
-.section{display:none}.section.show{display:block}.card{border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:12px;padding:16px;margin:14px 0;background:#10283b}
-.card h2{font-size:20px;color:#91b5ff;margin:0 0 12px}
-table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left}th{color:#9dbfff;background:#10243a}td.num{text-align:right;font-variant-numeric:tabular-nums}.good{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}
-.chart{height:260px;display:flex;align-items:end;gap:12px;padding:20px 8px 28px;overflow:auto;border-bottom:1px solid var(--line}.barwrap{min-width:50px;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:end;height:100%;gap:6px}.bar{width:70%;min-width:22px;background:linear-gradient(#4f9cff,#2550a5);border-radius:6px 6px 0 0}.barlabel{font-size:11px;color:var(--muted);white-space:nowrap}.barval{font-size:11px}
-.status{font-size:12px;border-radius:30px;padding:5px 10px;background:#334155;color:#e2e8f0}.status.ok{background:#14532d;color:#bbf7d0}.status.err{background:#7f1d1d;color:#fecaca}
-footer{text-align:center;color:#6f8ba8;padding:20px;font-size:12px}
-@media(max-width:900px){.layout{grid-template-columns:1fr;padding:0 12px}aside{height:auto;min-height:0}.kpis{grid-template-columns:repeat(2,1fr)}header{margin:12px;padding:16px}.main{padding:12px}table{min-width:650px}.tablewrap{overflow:auto}}
-@media(max-width:480px){.kpis{grid-template-columns:1fr 1fr}.kpi strong{font-size:22px}h1{font-size:21px}}
-</style></head>
-<body>
-<header>
-<h1>📊 KYT Duck Breeder Dashboard</h1><p>ภาพรวมผลการทำ KYT • ธุรกิจเป็ดพันธุ์ ปี 2569</p>
-<div class="kpis">
-<div class="kpi"><small>เดือนที่เลือก</small><strong id="kMonth">—</strong><small>ข้อมูลจาก Google Sheets</small></div>
-<div class="kpi"><small>KYT รายเดือน</small><strong id="kMonthCount">—</strong><small>จำนวนรายการที่บันทึก</small></div>
-<div class="kpi"><small>หน่วยงานที่มีข้อมูล</small><strong id="kOrgs">—</strong><small>หน่วยงานไม่ซ้ำ</small></div>
-<div class="kpi"><small>KYT สะสม</small><strong id="kTotal">—</strong><small>รวมรายการทั้งหมด</small></div>
-</div>
-<div class="actions"><button class="active" data-section="overview">ดูภาพรวม</button><button data-section="orgs">จัดอันดับหน่วยงาน</button><button data-section="trend">ดูกราฟแนวโน้ม</button><button id="printBtn">พิมพ์ / บันทึก PDF</button><span id="status" class="status">กำลังเชื่อมข้อมูล…</span></div>
-</header>
-<div class="layout">
-<aside><h3>INDEX</h3><button class="nav active" data-section="overview">ภาพรวมธุรกิจ</button><button class="nav" data-section="orgs">ตารางเปรียบเทียบ</button><button class="nav" data-section="trend">แนวโน้มรายเดือน</button><div class="orglist"><small>รายหน่วยงาน</small><div id="orgButtons"><p style="color:var(--muted)">กำลังโหลดข้อมูล…</p></div></div></aside>
-<main class="main">
-<div class="mainhead"><div class="logo">CPF<br> SHE&En</div><div><span class="eyebrow">CPF SHE&En · Safety Modular KYT · ธุรกิจเป็ดพันธุ์ · ปี 2569</span><div class="hero">KYT ธุรกิจเป็ดพันธุ์ — ติดตามการสร้างวัฒนธรรมด้านความปลอดภัย</div></div></div>
-<div id="summary" class="summary">กำลังดึงข้อมูลจาก Google Sheets…</div>
-<section id="overview" class="section show"><div class="card"><h2>ภาพรวมผลการทำ KYT</h2><div class="tablewrap"><table><thead><tr><th>#</th><th>หน่วยงาน</th><th class="num">จำนวนรายการ</th><th class="num">สัดส่วน</th></tr></thead><tbody id="overviewRows"><tr><td colspan="4">กำลังโหลด…</td></tr></tbody></table></div></div></section>
-<section id="orgs" class="section"><div class="card"><h2>ตารางเปรียบเทียบหน่วยงาน</h2><div class="tablewrap"><table><thead><tr><th>#</th><th>หน่วยงาน</th><th class="num">จำนวน KYT</th><th class="num">% สัดส่วน</th></tr></thead><tbody id="orgRows"></tbody></table></div></div></section>
-<section id="trend" class="section"><div class="card"><h2>กราฟจำนวนรายการตามเดือน</h2><div id="chart" class="chart"></div></div></section>
-<section id="detail" class="section"><div class="card"><h2 id="detailTitle">รายละเอียดหน่วยงาน</h2><p id="detailText"></p><div class="tablewrap"><table><thead><tr><th>วันที่</th><th>ผู้ปฏิบัติงาน</th><th>รายละเอียด KYT</th></tr></thead><tbody id="detailRows"></tbody></table></div></div></section>
-</main></div><footer>Dashboard เชื่อม Google Sheets • Auto refresh 30 วินาที</footer>
+header{margin:14px auto;max-width:1600px;padding:22px;background:linear-gradient(120deg,#19367b,#10285b);border-radius:18px}h1{margin:0;font-size:26px}header p{margin:5px 0 16px;color:#d5e2ff}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.kpi{background:#ffffff12;border:1px solid #ffffff2a;border-radius:13px;padding:15px}.kpi small{color:#d2defa}.kpi strong{display:block;font-size:27px;margin:4px 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}button{border:1px solid #718bc5;background:#29488c;color:white;padding:9px 14px;border-radius:9px;cursor:pointer;font:inherit}button:hover,button.active{background:var(--gold);color:#16233c}
+.layout{max-width:1600px;margin:auto;padding:0 10px 30px;display:grid;grid-template-columns:270px 1fr;gap:16px}
+aside,.main{background:var(--panel);border-radius:16px;padding:16px;min-width:0}aside{max-height:calc(100vh - 490px);min-height:460px;overflow:auto}aside h3{margin:0 0 10px;border-bottom:1px solid var(--line);padding-bottom:10px}
+.nav,.org{width:100%;text-align:left;margin:4px 0;background:transparent;border-color:transparent}.nav:before{content:"●";color:var(--gold);margin-right:10px}.nav.active{background:white;color:#16346f}
+.org{display:flex;justify-content:space-between;background:#18345f;border-color:#34527e;font-size:13px}.org b{color:var(--green)}
+.hero{font-size:clamp(23px,3vw,36px);color:#83aaff;margin:10px 0}.card{border:1px solid var(--line);border-top:4px solid var(--gold);border-radius:12px;padding:16px;margin:14px 0}.card h2{font-size:20px;color:#91b5ff;margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left}th{color:#9dbfff;background:#10243a}td.num{text-align:right}.good{color:var(--green);font-weight:700}
+.section{display:none}.section.show{display:block}.chart{height:260px;display:flex;align-items:end;gap:12px;padding:20px 8px;overflow:auto}.barwrap{min-width:55px;display:flex;flex-direction:column;align-items:center;justify-content:end;height:100%;gap:6px}.bar{width:28px;background:linear-gradient(#4f9cff,#2550a5);border-radius:6px 6px 0 0}.status{font-size:12px;color:#bbf7d0}.tablewrap{overflow:auto}
+@media(max-width:850px){.layout{grid-template-columns:1fr}aside{max-height:none;min-height:0}.kpis{grid-template-columns:repeat(2,1fr)}header{margin:10px;padding:15px}}
+</style></head><body>
+<header><h1>📊 KYT Duck Breeder Dashboard</h1><p>ภาพรวมผลการทำ KYT • ธุรกิจเป็ดพันธุ์ ปี 2569</p>
+<div class="kpis"><div class="kpi"><small>เดือนที่มีข้อมูลล่าสุด</small><strong id="month">—</strong><small>KYT รายเดือน</small></div><div class="kpi"><small>KYT รายเดือน</small><strong id="monthly">—</strong><small>รายการ</small></div><div class="kpi"><small>หน่วยงานที่มีข้อมูล</small><strong id="orgcount">—</strong><small>หน่วยงานไม่ซ้ำ</small></div><div class="kpi"><small>KYT สะสม</small><strong id="total">—</strong><small>รายการทั้งหมด</small></div></div>
+<div class="actions"><button class="active" data-sec="overview">ดูภาพรวม</button><button data-sec="ranking">จัดอันดับหน่วยงาน</button><button data-sec="trend">ดูกราฟแนวโน้ม</button><button id="print">พิมพ์ / บันทึก PDF</button><span id="status" class="status">กำลังเชื่อมต่อ…</span></div></header>
+<div class="layout"><aside><h3>INDEX</h3><button class="nav active" data-sec="overview">ภาพรวมธุรกิจ</button><button class="nav" data-sec="ranking">ตารางเปรียบเทียบ</button><button class="nav" data-sec="trend">แนวโน้มรายเดือน</button><hr><small>รายหน่วยงาน</small><div id="orglist">กำลังโหลด…</div></aside>
+<main class="main"><div class="hero">KYT ธุรกิจเป็ดพันธุ์ — ติดตามการสร้างวัฒนธรรมด้านความปลอดภัย</div><p id="summary">กำลังโหลดข้อมูลสรุป…</p>
+<section class="section show" id="overview"><div class="card"><h2>ภาพรวมผลการทำ KYT</h2><div class="tablewrap"><table><thead><tr><th>#</th><th>หน่วยงาน</th><th class="num">จำนวนรายการ</th><th class="num">สัดส่วน</th></tr></thead><tbody id="rows"></tbody></table></div></div></section>
+<section class="section" id="ranking"><div class="card"><h2>จัดอันดับหน่วยงาน</h2><div class="tablewrap"><table><thead><tr><th>#</th><th>หน่วยงาน</th><th class="num">จำนวนรายการ</th><th class="num">สัดส่วน</th></tr></thead><tbody id="rankrows"></tbody></table></div></div></section>
+<section class="section" id="trend"><div class="card"><h2>แนวโน้มรายเดือน</h2><div class="chart" id="chart"></div></div></section>
+<section class="section" id="detail"><div class="card"><h2 id="detailtitle"></h2><p id="detaildesc"></p><div class="tablewrap"><table><thead><tr><th>วันที่</th><th>ผู้บันทึก</th><th>KYT</th></tr></thead><tbody id="detailrows"></tbody></table></div></div></section>
+</main></div>
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbySFcKJO2J0Y5el4S1vLhs4dYShJjHmg25w2dtHRLowDSFdqn2R-nF3gLzVPZsg-Bya/exec";
-let records=[],headers=[],orgStats=[],monthStats=[],selectedOrg="";
-const $=id=>document.getElementById(id);
-function norm(s){return String(s||"").trim().toLowerCase()}
-function findCol(keys){return headers.findIndex(h=>keys.some(k=>norm(h).includes(norm(k))))}
-function cell(r,keys){let i=findCol(keys);return i>=0?String(r[i]||"").trim():""}
-function countRows(rows){return rows.length}
-function parseData(data){
- headers=data.headers||[];records=data.rows||[];
- // identify likely fields from actual form response headers
- const orgI=findCol(["หน่วยงาน"]);const dateI=findCol(["ประทับเวลา","วันที่","timestamp"]);const nameI=findCol(["ชื่อ-สกุล","ชื่อผู้"]); 
- const kyts=headers.map((h,i)=>({h,i})).filter(x=>/kyt|ความเสี่ยง|อันตราย|กิจกรรม/i.test(x.h));
- let orgMap=new Map(),months=new Map();
- records.forEach(r=>{
-  let org=orgI>=0?String(r[orgI]||"ไม่ระบุ").trim():"ไม่ระบุ";
-  if(!org)org="ไม่ระบุ";orgMap.set(org,(orgMap.get(org)||0)+1);
-  let d=dateI>=0?String(r[dateI]||""):"";let m=(d.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/)||[]);let month=m?m[2]+"/"+m[3]:d.slice(0,7)||"ไม่ระบุ";
-  months.set(month,(months.get(month)||0)+1);
- });
- orgStats=[...orgMap].map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count);
- monthStats=[...months].map(([name,count])=>({name,count}));
- const total=records.length;let topMonth=monthStats.at(-1)?.name||"—";
- $("kMonth").textContent=topMonth;$("kMonthCount").textContent=(monthStats.at(-1)?.count||0).toLocaleString("th-TH");
- $("kOrgs").textContent=orgStats.length.toLocaleString("th-TH");$("kTotal").textContent=total.toLocaleString("th-TH");
- $("summary").textContent=`มีข้อมูล ${total.toLocaleString("th-TH")} รายการ จาก ${orgStats.length} หน่วยงาน • อัปเดต ${new Date().toLocaleString("th-TH")}`;
- renderTables();renderOrgButtons();renderChart();
-}
-function renderTables(){
- const total=records.length||1;let rows=orgStats.map((o,i)=>`<tr><td>${i+1}</td><td><a href="#" data-org="${esc(o.name)}" style="color:#8fb5ff">${esc(o.name)}</a></td><td class="num">${o.count.toLocaleString("th-TH")}</td><td class="num good">${(o.count/total*100).toFixed(1)}%</td></tr>`).join("");
- $("overviewRows").innerHTML=rows||'<tr><td colspan="4">ไม่พบข้อมูล</td></tr>';$("orgRows").innerHTML=rows;
- document.querySelectorAll("[data-org]").forEach(a=>a.onclick=e=>{e.preventDefault();showOrg(a.dataset.org)});
-}
-function renderOrgButtons(){$("orgButtons").innerHTML=orgStats.map(o=>`<button class="org" data-org="${esc(o.name)}"><span>${esc(o.name)}</span><b>${(o.count/(records.length||1)*100).toFixed(0)}%</b></button>`).join("")||"ไม่มีข้อมูล";$("orgButtons").querySelectorAll("[data-org]").forEach(b=>b.onclick=()=>showOrg(b.dataset.org))}
-function renderChart(){$("chart").innerHTML=monthStats.map(m=>`<div class="barwrap"><span class="barval">${m.count}</span><div class="bar" style="height:${Math.max(4,m.count/Math.max(...monthStats.map(x=>x.count))*180)}px"></div><span class="barlabel">${esc(m.name)}</span></div>`).join("")}
-function showOrg(name){selectedOrg=name;$("detailTitle").textContent="รายละเอียด: "+name;let oi=findCol(["หน่วยงาน"]);let filtered=records.filter(r=>String(r[oi]||"").trim()===name);let di=findCol(["ประทับเวลา","วันที่","timestamp"]),ni=findCol(["ชื่อ-สกุล","ชื่อผู้"]),ki=headers.findIndex(h=>/kyt|ความเสี่ยง|อันตราย/i.test(h));$("detailText").textContent=`พบ ${filtered.length} รายการ`; $("detailRows").innerHTML=filtered.slice().reverse().slice(0,100).map(r=>`<tr><td>${esc(di>=0?r[di]:"")}</td><td>${esc(ni>=0?r[ni]:"")}</td><td>${esc(ki>=0?r[ki]:"")}</td></tr>`).join("");showSection("detail")}
-function showSection(id){document.querySelectorAll(".section").forEach(s=>s.classList.toggle("show",s.id===id));document.querySelectorAll("[data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===id))}
-document.querySelectorAll("[data-section]").forEach(b=>b.onclick=()=>showSection(b.dataset.section));$("printBtn").onclick=()=>window.print();
-function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function load(){
- const cb="kyt_cb_"+Date.now(),script=document.createElement("script");let done=false;const timeout=setTimeout(()=>finish(false),15000);
- function finish(ok){if(done)return;done=true;clearTimeout(timeout);script.remove();delete window[cb];$("status").textContent=ok?"เชื่อมต่อแล้ว":"เชื่อมต่อไม่สำเร็จ";$("status").className="status "+(ok?"ok":"err")}
- window[cb]=data=>{try{if(!data||data.success===false)throw Error("API response invalid");parseData(data);finish(true)}catch(e){$("summary").textContent="อ่านข้อมูลไม่สำเร็จ: "+e.message;finish(false)}};
- script.onerror=()=>finish(false);script.src=API_URL+"?callback="+cb+"&_="+Date.now();document.head.appendChild(script);
-}
-load();setInterval(load,30000);
+const API="https://script.google.com/macros/s/AKfycbySFcKJO2J0Y5el4S1vLhs4dYShJjHmg25w2dtHRLowDSFdqn2R-nF3gLzVPZsg-Bya/exec";
+const $=id=>document.getElementById(id);let data=null;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function section(id){document.querySelectorAll('.section').forEach(x=>x.classList.toggle('show',x.id===id));document.querySelectorAll('[data-sec]').forEach(x=>x.classList.toggle('active',x.dataset.sec===id))}
+document.querySelectorAll('[data-sec]').forEach(b=>b.addEventListener('click',()=>section(b.dataset.sec)));$('print').addEventListener('click',()=>window.print());
+function detail(org){const cb='dcb'+Date.now();let s=document.createElement('script');window[cb]=d=>{delete window[cb];s.remove();$('detailtitle').textContent='รายละเอียด '+org;$('detaildesc').textContent='ทั้งหมด '+(d.count||0)+' รายการ';$('detailrows').innerHTML=(d.rows||[]).map(r=>`<tr><td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.kyt)}</td></tr>`).join('');section('detail')};s.onerror=()=>{delete window[cb];s.remove();alert('โหลดรายละเอียดไม่สำเร็จ')};s.src=API+'?action=detail&org='+encodeURIComponent(org)+'&callback='+cb;document.head.appendChild(s)}
+function render(d){data=d;let months=d.months||[],orgs=d.orgs||[],last=months[months.length-1]||{name:'—',count:0};$('month').textContent=last.name;$('monthly').textContent=Number(last.count||0).toLocaleString('th-TH');$('orgcount').textContent=orgs.length;$('total').textContent=Number(d.total||0).toLocaleString('th-TH');$('summary').textContent=`มีข้อมูล ${Number(d.total||0).toLocaleString('th-TH')} รายการ จาก ${orgs.length} หน่วยงาน • อัปเดต ${new Date(d.updatedAt||Date.now()).toLocaleString('th-TH')}`;
+let table=orgs.map((o,i)=>`<tr><td>${i+1}</td><td><a href="#" data-org="${esc(o.name)}">${esc(o.name)}</a></td><td class="num">${o.count.toLocaleString('th-TH')}</td><td class="num good">${(o.count/(d.total||1)*100).toFixed(1)}%</td></tr>`).join('');$('rows').innerHTML=table;$('rankrows').innerHTML=table;
+$('orglist').innerHTML=orgs.map(o=>`<button class="org" data-org="${esc(o.name)}"><span>${esc(o.name)}</span><b>${(o.count/(d.total||1)*100).toFixed(0)}%</b></button>`).join('');
+document.querySelectorAll('[data-org]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();detail(b.dataset.org)}));
+let max=Math.max(1,...months.map(x=>x.count));$('chart').innerHTML=months.map(m=>`<div class="barwrap"><small>${m.count}</small><div class="bar" style="height:${Math.max(5,m.count/max*170)}px"></div><small>${esc(m.name)}</small></div>`).join('')}
+function load(){const cb='kytcb'+Date.now(),s=document.createElement('script');let timer=setTimeout(()=>finish(false),9000);function finish(ok){clearTimeout(timer);delete window[cb];s.remove();$('status').textContent=ok?'เชื่อมต่อแล้ว':'โหลดไม่สำเร็จ';$('status').style.color=ok?'#86efac':'#fca5a5'}window[cb]=d=>{try{if(!d.success)throw Error(d.error);render(d);finish(true)}catch(e){finish(false);$('summary').textContent=e.message}};s.onerror=()=>finish(false);s.src=API+'?callback='+cb+'&_='+Date.now();document.head.appendChild(s)}
+load();setInterval(load,60000);
 </script></body></html>
